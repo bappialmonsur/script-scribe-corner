@@ -141,7 +141,7 @@ function LoginPage() {
 }
 
 function FormBody(props: {
-  mode: "login" | "bootstrap";
+  mode: "login" | "bootstrap" | "teacher";
   phone: string; setPhone: (v: string) => void;
   password: string; setPassword: (v: string) => void;
   fullName: string; setFullName: (v: string) => void;
@@ -149,9 +149,10 @@ function FormBody(props: {
   handleSubmit: (e: FormEvent) => void;
 }) {
   const { mode, phone, setPhone, password, setPassword, fullName, setFullName, busy, handleSubmit } = props;
+  const isSignup = mode === "bootstrap" || mode === "teacher";
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {mode === "bootstrap" && (
+      {isSignup && (
         <div className="space-y-2">
           <Label htmlFor="name">পুরো নাম</Label>
           <Input id="name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="আপনার নাম" />
