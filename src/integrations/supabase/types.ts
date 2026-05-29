@@ -394,6 +394,7 @@ export type Database = {
           created_at: string
           department: Database["public"]["Enums"]["department_type"]
           father_name: string | null
+          father_occupation: string | null
           full_name: string
           guardian_phone: string | null
           id: string
@@ -401,6 +402,7 @@ export type Database = {
           mother_name: string | null
           phone: string | null
           roll: string | null
+          school_name: string | null
           user_id: string | null
         }
         Insert: {
@@ -411,6 +413,7 @@ export type Database = {
           created_at?: string
           department?: Database["public"]["Enums"]["department_type"]
           father_name?: string | null
+          father_occupation?: string | null
           full_name: string
           guardian_phone?: string | null
           id?: string
@@ -418,6 +421,7 @@ export type Database = {
           mother_name?: string | null
           phone?: string | null
           roll?: string | null
+          school_name?: string | null
           user_id?: string | null
         }
         Update: {
@@ -428,6 +432,7 @@ export type Database = {
           created_at?: string
           department?: Database["public"]["Enums"]["department_type"]
           father_name?: string | null
+          father_occupation?: string | null
           full_name?: string
           guardian_phone?: string | null
           id?: string
@@ -435,6 +440,7 @@ export type Database = {
           mother_name?: string | null
           phone?: string | null
           roll?: string | null
+          school_name?: string | null
           user_id?: string | null
         }
         Relationships: []
