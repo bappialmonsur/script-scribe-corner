@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Loader2, ShieldCheck, Phone } from "lucide-react";
 import { normalizeBdPhone } from "@/lib/phone";
 import { bootstrapAdminAccount, checkAdminExists } from "@/lib/admin.functions";
+import { teacherSignup } from "@/lib/teacher.functions";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
