@@ -3,6 +3,18 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
+// Throws unless the given user has the admin role. Uses supabaseAdmin so the
+// check cannot be bypassed even though writes below also use supabaseAdmin.
+async function assertAdmin(userId: string) {
+  const { data: isAdminRow } = await supabaseAdmin
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("role", "admin")
+    .maybeSingle();
+  if (!isAdminRow) throw new Error("শুধু অ্যাডমিন এই কাজ করতে পারে");
+}
+
 export type McqQuestion = {
   question: string;
   options: string[];
@@ -117,6 +129,7 @@ export const addManualQuestion = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => manualSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId } = context;
+    await assertAdmin(userId);
     const { error } = await supabaseAdmin.from("mcq_questions").insert({
       class_level: data.classLevel as any,
       subject: data.subject,
@@ -140,7 +153,8 @@ const deleteSchema = z.object({ id: z.string().uuid() });
 export const deleteQuestion = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => deleteSchema.parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
     const { error } = await supabaseAdmin
       .from("mcq_questions")
       .update({ is_active: false })
@@ -166,6 +180,7 @@ export const aiGenerateQuestions = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => aiBatchSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId } = context;
+    await assertAdmin(userId);
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI কনফিগারেশন পাওয়া যায়নি");
 
