@@ -25,7 +25,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "bootstrap">("login");
+  const [mode, setMode] = useState<"login" | "bootstrap" | "teacher">("login");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -34,6 +34,7 @@ function LoginPage() {
 
   const callBootstrap = useServerFn(bootstrapAdminAccount);
   const callCheckAdmin = useServerFn(checkAdminExists);
+  const callTeacherSignup = useServerFn(teacherSignup);
 
   useEffect(() => {
     callCheckAdmin()
