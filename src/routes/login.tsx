@@ -106,7 +106,7 @@ function LoginPage() {
         </Link>
 
         {adminExists === false ? (
-          <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+          <Tabs value={mode === "teacher" ? "login" : mode} onValueChange={(v) => setMode(v as any)}>
             <TabsList className="grid grid-cols-2 w-full mb-6">
               <TabsTrigger value="login">লগইন</TabsTrigger>
               <TabsTrigger value="bootstrap">প্রথম এডমিন তৈরি</TabsTrigger>
@@ -114,13 +114,25 @@ function LoginPage() {
             <FormBody {...{ mode, phone, setPhone, password, setPassword, fullName, setFullName, busy, handleSubmit }} />
           </Tabs>
         ) : (
-          <FormBody {...{ mode: "login", phone, setPhone, password, setPassword, fullName, setFullName, busy, handleSubmit }} />
+          <FormBody {...{ mode: mode === "bootstrap" ? "login" : mode, phone, setPhone, password, setPassword, fullName, setFullName, busy, handleSubmit }} />
         )}
+
+        <div className="mt-4 text-center text-sm">
+          {mode === "teacher" ? (
+            <button type="button" onClick={() => setMode("login")} className="text-academy-navy underline">
+              লগইনে ফিরে যান
+            </button>
+          ) : (
+            <button type="button" onClick={() => setMode("teacher")} className="text-academy-navy underline">
+              শিক্ষক? নতুন একাউন্ট তৈরি করুন
+            </button>
+          )}
+        </div>
 
         <div className="mt-6 p-3 bg-academy-soft rounded-lg flex gap-2 text-xs text-muted-foreground">
           <ShieldCheck className="size-4 text-academy-gold shrink-0 mt-0.5" />
           <p>
-            শিক্ষার্থী: ভর্তি ফরমে দেওয়া ফোন নম্বর ও এডমিন কর্তৃক সেট করা পাসওয়ার্ড দিয়ে লগইন করুন।
+            শিক্ষার্থী: ভর্তি ফরমে দেওয়া ফোন নম্বর ও এডমিন কর্তৃক সেট করা পাসওয়ার্ড দিয়ে লগইন করুন। শিক্ষক একাউন্ট তৈরির পর এডমিন অনুমতি দিলে ফিচার দেখা যাবে।
           </p>
         </div>
       </div>
