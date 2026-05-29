@@ -25,7 +25,8 @@ export const Route = createFileRoute("/student")({
 });
 
 const menu = [
-  { title: "ড্যাশবোর্ড", url: "/student", icon: Home, exact: true },
+  { title: "নিউজফিড", url: "/student", icon: Newspaper, exact: true },
+  { title: "ড্যাশবোর্ড", url: "/student/dashboard", icon: Home },
   { title: "অনলাইন পরীক্ষা", url: "/student/exam", icon: BookOpenCheck },
   { title: "নোটিশ", url: "/student/notices", icon: Bell },
   { title: "উপস্থিতি", url: "/student/attendance", icon: CalendarCheck },
