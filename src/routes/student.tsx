@@ -9,7 +9,7 @@ import {
   SidebarHeader, SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
-  Home, Bell, CalendarCheck, GraduationCap, BarChart3, FileText, LogOut, Loader2, ShieldAlert, BookOpenCheck, UserRound,
+  Home, Bell, CalendarCheck, GraduationCap, BarChart3, FileText, LogOut, Loader2, ShieldAlert, BookOpenCheck, UserRound, Newspaper,
 } from "lucide-react";
 import { bnClass } from "@/lib/grading";
 
