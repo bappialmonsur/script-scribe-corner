@@ -9,7 +9,7 @@ import {
   SidebarHeader, SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
-  Home, Bell, CalendarCheck, GraduationCap, BarChart3, FileText, LogOut, Loader2, ShieldAlert, BookOpenCheck, UserRound, Newspaper,
+  Home, Bell, CalendarCheck, GraduationCap, BarChart3, FileText, LogOut, Loader2, ShieldAlert, BookOpenCheck, UserRound, Newspaper, MessageSquare,
 } from "lucide-react";
 import { bnClass } from "@/lib/grading";
 
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/student")({
 const menu = [
   { title: "নিউজফিড", url: "/student", icon: Newspaper, exact: true },
   { title: "ড্যাশবোর্ড", url: "/student/dashboard", icon: Home },
+  { title: "মেসেজ", url: "/student/messages", icon: MessageSquare },
   { title: "অনলাইন পরীক্ষা", url: "/student/exam", icon: BookOpenCheck },
   { title: "নোটিশ", url: "/student/notices", icon: Bell },
   { title: "উপস্থিতি", url: "/student/attendance", icon: CalendarCheck },
