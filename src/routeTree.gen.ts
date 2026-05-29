@@ -32,6 +32,7 @@ import { Route as AdminResultsRouteImport } from './routes/admin.results'
 import { Route as AdminQuestionBankRouteImport } from './routes/admin.question-bank'
 import { Route as AdminPhonebookRouteImport } from './routes/admin.phonebook'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
+import { Route as AdminNewsfeedRouteImport } from './routes/admin.newsfeed'
 import { Route as AdminMarksheetRouteImport } from './routes/admin.marksheet'
 import { Route as AdminFeedRouteImport } from './routes/admin.feed'
 import { Route as AdminAttendanceRouteImport } from './routes/admin.attendance'
@@ -156,6 +157,11 @@ const AdminNoticesRoute = AdminNoticesRouteImport.update({
   path: '/notices',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNewsfeedRoute = AdminNewsfeedRouteImport.update({
+  id: '/newsfeed',
+  path: '/newsfeed',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMarksheetRoute = AdminMarksheetRouteImport.update({
   id: '/marksheet',
   path: '/marksheet',
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
@@ -272,6 +280,7 @@ export interface FileRoutesById {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
     | '/admin/question-bank'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
     | '/admin/question-bank'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
     | '/admin/question-bank'
@@ -563,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNoticesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/newsfeed': {
+      id: '/admin/newsfeed'
+      path: '/newsfeed'
+      fullPath: '/admin/newsfeed'
+      preLoaderRoute: typeof AdminNewsfeedRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/marksheet': {
       id: '/admin/marksheet'
       path: '/marksheet'
@@ -643,6 +662,7 @@ interface AdminRouteChildren {
   AdminAttendanceRoute: typeof AdminAttendanceRoute
   AdminFeedRoute: typeof AdminFeedRoute
   AdminMarksheetRoute: typeof AdminMarksheetRoute
+  AdminNewsfeedRoute: typeof AdminNewsfeedRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
   AdminPhonebookRoute: typeof AdminPhonebookRoute
   AdminQuestionBankRoute: typeof AdminQuestionBankRoute
@@ -662,6 +682,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAttendanceRoute: AdminAttendanceRoute,
   AdminFeedRoute: AdminFeedRoute,
   AdminMarksheetRoute: AdminMarksheetRoute,
+  AdminNewsfeedRoute: AdminNewsfeedRoute,
   AdminNoticesRoute: AdminNoticesRoute,
   AdminPhonebookRoute: AdminPhonebookRoute,
   AdminQuestionBankRoute: AdminQuestionBankRoute,
