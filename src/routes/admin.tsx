@@ -37,6 +37,7 @@ import {
   Database,
   Newspaper,
   UserCog,
+  KeyRound,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -72,6 +73,7 @@ const menu: MenuItem[] = [
   { title: "প্রশ্নব্যাংক (MCQ)", url: "/admin/question-bank", icon: Database },
   { title: "নোটিশ", url: "/admin/notices", icon: Bell, feature: "newsfeed" },
   { title: "শিক্ষক ব্যবস্থাপনা", url: "/admin/teachers", icon: UserCog },
+  { title: "পাসওয়ার্ড পরিবর্তন", url: "/admin/security", icon: KeyRound },
   { title: "ওয়েবসাইট কন্ট্রোল", url: "/admin/site", icon: Globe },
   { title: "এস এম এস প্যানেল", url: "/admin/sms", icon: MessageSquare },
 ];
