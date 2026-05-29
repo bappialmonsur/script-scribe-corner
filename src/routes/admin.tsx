@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useSession, useIsAdmin } from "@/hooks/use-auth";
+import { useSession } from "@/hooks/use-auth";
+import { useMyAccess, type TeacherFeature } from "@/hooks/use-access";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
@@ -35,11 +36,12 @@ import {
   BarChart3,
   Database,
   Newspaper,
+  UserCog,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "এডমিন প্যানেল — সমীকরণ শিক্ষা পরিবার" }],
+    meta: [{ title: "প্যানেল — সমীকরণ শিক্ষা পরিবার" }],
     links: [{
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap",
@@ -48,19 +50,28 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const menu = [
+type MenuItem = {
+  title: string;
+  url: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  feature?: TeacherFeature;
+};
+
+const menu: MenuItem[] = [
   { title: "ড্যাশবোর্ড", url: "/admin", icon: LayoutDashboard, exact: true },
-  { title: "নিউজফিড পোস্ট", url: "/admin/feed", icon: Newspaper },
-  { title: "ছাত্রছাত্রী ভর্তি", url: "/admin/admission", icon: UserPlus },
-  { title: "সকল শিক্ষার্থী", url: "/admin/students", icon: Users },
-  { title: "ফোনবুক", url: "/admin/phonebook", icon: BookUser },
-  { title: "দৈনিক হাজিরা", url: "/admin/attendance", icon: ClipboardCheck },
-  { title: "অনুপস্থিতি ট্র্যাকার", url: "/admin/absent", icon: CalendarSearch },
-  { title: "পরীক্ষা ও ফলাফল", url: "/admin/results", icon: GraduationCap },
-  { title: "মার্কশীট প্রিন্ট", url: "/admin/marksheet", icon: Printer },
-  { title: "রেজাল্ট এনালাইসিস", url: "/admin/analysis", icon: BarChart3 },
+  { title: "নিউজফিড পোস্ট", url: "/admin/feed", icon: Newspaper, feature: "newsfeed" },
+  { title: "ছাত্রছাত্রী ভর্তি", url: "/admin/admission", icon: UserPlus, feature: "admission" },
+  { title: "সকল শিক্ষার্থী", url: "/admin/students", icon: Users, feature: "admission" },
+  { title: "ফোনবুক", url: "/admin/phonebook", icon: BookUser, feature: "admission" },
+  { title: "দৈনিক হাজিরা", url: "/admin/attendance", icon: ClipboardCheck, feature: "attendance" },
+  { title: "অনুপস্থিতি ট্র্যাকার", url: "/admin/absent", icon: CalendarSearch, feature: "attendance" },
+  { title: "পরীক্ষা ও ফলাফল", url: "/admin/results", icon: GraduationCap, feature: "results" },
+  { title: "মার্কশীট প্রিন্ট", url: "/admin/marksheet", icon: Printer, feature: "results" },
+  { title: "রেজাল্ট এনালাইসিস", url: "/admin/analysis", icon: BarChart3, feature: "results" },
   { title: "প্রশ্নব্যাংক (MCQ)", url: "/admin/question-bank", icon: Database },
-  { title: "নোটিশ", url: "/admin/notices", icon: Bell },
+  { title: "নোটিশ", url: "/admin/notices", icon: Bell, feature: "newsfeed" },
+  { title: "শিক্ষক ব্যবস্থাপনা", url: "/admin/teachers", icon: UserCog },
   { title: "ওয়েবসাইট কন্ট্রোল", url: "/admin/site", icon: Globe },
   { title: "এস এম এস প্যানেল", url: "/admin/sms", icon: MessageSquare },
 ];
@@ -68,9 +79,10 @@ const menu = [
 function AdminLayout() {
   const navigate = useNavigate();
   const { user, loading } = useSession();
-  const { data: isAdmin, isLoading: roleLoading } = useIsAdmin(user);
+  const { data: access, isLoading: accessLoading } = useMyAccess(user);
+  const path = useRouterState({ select: (r) => r.location.pathname });
 
-  if (loading || (user && roleLoading)) {
+  if (loading || (user && accessLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-academy-soft">
         <Loader2 className="size-8 animate-spin text-academy-navy" />
@@ -89,33 +101,67 @@ function AdminLayout() {
     );
   }
 
-  if (!isAdmin) {
+  const isAdmin = !!access?.isAdmin;
+  const isTeacher = !!access?.isTeacher;
+
+  if (!isAdmin && !isTeacher) {
     return <NotAdmin />;
   }
+
+  // Build the menu visible to this user
+  const visibleMenu = isAdmin
+    ? menu
+    : menu.filter((m) => m.exact || (m.feature && access!.permissions.includes(m.feature)));
+
+  // Access guard: teachers may only open pages they have permission for
+  const isAllowedPath = (() => {
+    if (isAdmin) return true;
+    return visibleMenu.some((m) =>
+      m.exact ? path === m.url : path === m.url || path.startsWith(m.url + "/"),
+    );
+  })();
+
+  const panelLabel = isAdmin ? "এডমিন প্যানেল" : "শিক্ষক প্যানেল";
+
+  const onLogout = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
+  };
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-academy-soft" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-        <AdminSidebar onLogout={async () => {
-          await supabase.auth.signOut();
-          navigate({ to: "/login" });
-        }} />
+        <PanelSidebar items={visibleMenu} subtitle={isAdmin ? "শিক্ষা পরিবার" : "শিক্ষক"} onLogout={onLogout} />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 bg-white border-b border-academy-navy/10 flex items-center px-4 gap-2 sticky top-0 z-10">
             <SidebarTrigger />
-            <div className="font-bold text-academy-navy">এডমিন প্যানেল</div>
+            <div className="font-bold text-academy-navy">{panelLabel}</div>
             <div className="ml-auto text-xs text-muted-foreground hidden sm:block">
               {user.phone ? "0" + user.phone.replace(/^\+?880/, "") : user.email}
             </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
-            <Outlet />
+            {isAllowedPath ? (
+              <Outlet />
+            ) : (
+              <div className="max-w-md mx-auto bg-white rounded-2xl shadow-sm p-8 text-center border mt-10">
+                <ShieldCheck className="size-12 mx-auto text-academy-gold mb-3" />
+                <h1 className="text-xl font-bold text-academy-navy mb-2">এই ফিচারের অনুমতি নেই</h1>
+                <p className="text-sm text-muted-foreground mb-6">
+                  এই অংশটি ব্যবহারের অনুমতি আপনাকে দেওয়া হয়নি। প্রয়োজন হলে এডমিনের সাথে যোগাযোগ করুন।
+                </p>
+                <Button onClick={() => navigate({ to: "/admin" })} variant="outline" className="w-full">
+                  ড্যাশবোর্ডে ফিরে যান
+                </Button>
+              </div>
+            )}
           </main>
         </div>
       </div>
     </SidebarProvider>
   );
 }
+
 
 function AdminSidebar({ onLogout }: { onLogout: () => void }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
