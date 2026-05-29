@@ -180,6 +180,10 @@ export type Database = {
       }
       feed_posts: {
         Row: {
+          author_id: string | null
+          author_meta: string | null
+          author_name: string | null
+          author_role: string
           body: string | null
           class_level: Database["public"]["Enums"]["class_level"] | null
           created_at: string
@@ -187,9 +191,14 @@ export type Database = {
           is_active: boolean
           media_path: string | null
           media_type: Database["public"]["Enums"]["feed_media_type"]
+          status: string
           updated_at: string
         }
         Insert: {
+          author_id?: string | null
+          author_meta?: string | null
+          author_name?: string | null
+          author_role?: string
           body?: string | null
           class_level?: Database["public"]["Enums"]["class_level"] | null
           created_at?: string
@@ -197,9 +206,14 @@ export type Database = {
           is_active?: boolean
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]
+          status?: string
           updated_at?: string
         }
         Update: {
+          author_id?: string | null
+          author_meta?: string | null
+          author_name?: string | null
+          author_role?: string
           body?: string | null
           class_level?: Database["public"]["Enums"]["class_level"] | null
           created_at?: string
@@ -207,6 +221,7 @@ export type Database = {
           is_active?: boolean
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -322,6 +337,39 @@ export type Database = {
           source?: string
           subject?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_read: boolean
+          sender_meta: string | null
+          sender_name: string | null
+          sender_role: string
+          student_user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          sender_meta?: string | null
+          sender_name?: string | null
+          sender_role: string
+          student_user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          sender_meta?: string | null
+          sender_name?: string | null
+          sender_role?: string
+          student_user_id?: string
         }
         Relationships: []
       }
