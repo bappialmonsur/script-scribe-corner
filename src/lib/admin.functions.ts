@@ -26,7 +26,7 @@ export const createStudentAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => studentSchema.parse(input))
   .handler(async ({ data, context }) => {
-    // Verify caller is admin
+    // Verify caller is admin OR a teacher with admission permission
     const { data: roleRow, error: roleErr } = await context.supabase
       .from("user_roles")
       .select("role")
@@ -34,7 +34,16 @@ export const createStudentAccount = createServerFn({ method: "POST" })
       .eq("role", "admin")
       .maybeSingle();
     if (roleErr) throw new Error(roleErr.message);
-    if (!roleRow) throw new Error("শুধুমাত্র এডমিন এই কাজ করতে পারবেন");
+    if (!roleRow) {
+      const { data: perm, error: permErr } = await (context.supabase as any)
+        .from("teacher_permissions")
+        .select("id")
+        .eq("user_id", context.userId)
+        .eq("feature", "admission")
+        .maybeSingle();
+      if (permErr) throw new Error(permErr.message);
+      if (!perm) throw new Error("এই কাজের অনুমতি নেই");
+    }
 
     const phoneE164 = normalizeBdPhone(data.phone);
     if (!phoneE164) throw new Error("সঠিক ফোন নম্বর দিন (১১ ডিজিটের, ০১... দিয়ে শুরু)");
