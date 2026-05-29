@@ -34,6 +34,7 @@ import { Route as AdminQuestionBankRouteImport } from './routes/admin.question-b
 import { Route as AdminPhonebookRouteImport } from './routes/admin.phonebook'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
 import { Route as AdminNewsfeedRouteImport } from './routes/admin.newsfeed'
+import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminMarksheetRouteImport } from './routes/admin.marksheet'
 import { Route as AdminFeedRouteImport } from './routes/admin.feed'
 import { Route as AdminAttendanceRouteImport } from './routes/admin.attendance'
@@ -168,6 +169,11 @@ const AdminNewsfeedRoute = AdminNewsfeedRouteImport.update({
   path: '/newsfeed',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMessagesRoute = AdminMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMarksheetRoute = AdminMarksheetRouteImport.update({
   id: '/marksheet',
   path: '/marksheet',
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
@@ -253,6 +260,7 @@ export interface FileRoutesByTo {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/feed': typeof AdminFeedRoute
   '/admin/marksheet': typeof AdminMarksheetRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
@@ -325,6 +334,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/messages'
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/messages'
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/admin/attendance'
     | '/admin/feed'
     | '/admin/marksheet'
+    | '/admin/messages'
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
@@ -601,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNewsfeedRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/messages': {
+      id: '/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/marksheet': {
       id: '/admin/marksheet'
       path: '/marksheet'
@@ -681,6 +700,7 @@ interface AdminRouteChildren {
   AdminAttendanceRoute: typeof AdminAttendanceRoute
   AdminFeedRoute: typeof AdminFeedRoute
   AdminMarksheetRoute: typeof AdminMarksheetRoute
+  AdminMessagesRoute: typeof AdminMessagesRoute
   AdminNewsfeedRoute: typeof AdminNewsfeedRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
   AdminPhonebookRoute: typeof AdminPhonebookRoute
@@ -701,6 +721,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAttendanceRoute: AdminAttendanceRoute,
   AdminFeedRoute: AdminFeedRoute,
   AdminMarksheetRoute: AdminMarksheetRoute,
+  AdminMessagesRoute: AdminMessagesRoute,
   AdminNewsfeedRoute: AdminNewsfeedRoute,
   AdminNoticesRoute: AdminNoticesRoute,
   AdminPhonebookRoute: AdminPhonebookRoute,
