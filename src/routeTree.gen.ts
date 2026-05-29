@@ -31,6 +31,7 @@ import { Route as AdminSiteRouteImport } from './routes/admin.site'
 import { Route as AdminSecurityRouteImport } from './routes/admin.security'
 import { Route as AdminResultsRouteImport } from './routes/admin.results'
 import { Route as AdminQuestionBankRouteImport } from './routes/admin.question-bank'
+import { Route as AdminProfileRouteImport } from './routes/admin.profile'
 import { Route as AdminPhonebookRouteImport } from './routes/admin.phonebook'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
 import { Route as AdminNewsfeedRouteImport } from './routes/admin.newsfeed'
@@ -154,6 +155,11 @@ const AdminQuestionBankRoute = AdminQuestionBankRouteImport.update({
   path: '/question-bank',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProfileRoute = AdminProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPhonebookRoute = AdminPhonebookRouteImport.update({
   id: '/phonebook',
   path: '/phonebook',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/results': typeof AdminResultsRouteWithChildren
   '/admin/security': typeof AdminSecurityRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/security': typeof AdminSecurityRoute
   '/admin/site': typeof AdminSiteRoute
@@ -300,6 +308,7 @@ export interface FileRoutesById {
   '/admin/newsfeed': typeof AdminNewsfeedRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/admin/phonebook': typeof AdminPhonebookRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/results': typeof AdminResultsRouteWithChildren
   '/admin/security': typeof AdminSecurityRoute
@@ -338,6 +347,7 @@ export interface FileRouteTypes {
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
+    | '/admin/profile'
     | '/admin/question-bank'
     | '/admin/results'
     | '/admin/security'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
+    | '/admin/profile'
     | '/admin/question-bank'
     | '/admin/security'
     | '/admin/site'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/admin/newsfeed'
     | '/admin/notices'
     | '/admin/phonebook'
+    | '/admin/profile'
     | '/admin/question-bank'
     | '/admin/results'
     | '/admin/security'
@@ -592,6 +604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuestionBankRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/profile': {
+      id: '/admin/profile'
+      path: '/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/phonebook': {
       id: '/admin/phonebook'
       path: '/phonebook'
@@ -704,6 +723,7 @@ interface AdminRouteChildren {
   AdminNewsfeedRoute: typeof AdminNewsfeedRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
   AdminPhonebookRoute: typeof AdminPhonebookRoute
+  AdminProfileRoute: typeof AdminProfileRoute
   AdminQuestionBankRoute: typeof AdminQuestionBankRoute
   AdminResultsRoute: typeof AdminResultsRouteWithChildren
   AdminSecurityRoute: typeof AdminSecurityRoute
@@ -725,6 +745,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNewsfeedRoute: AdminNewsfeedRoute,
   AdminNoticesRoute: AdminNoticesRoute,
   AdminPhonebookRoute: AdminPhonebookRoute,
+  AdminProfileRoute: AdminProfileRoute,
   AdminQuestionBankRoute: AdminQuestionBankRoute,
   AdminResultsRoute: AdminResultsRouteWithChildren,
   AdminSecurityRoute: AdminSecurityRoute,

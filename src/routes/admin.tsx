@@ -64,6 +64,7 @@ type MenuItem = {
 
 const menu: MenuItem[] = [
   { title: "ড্যাশবোর্ড", url: "/admin", icon: LayoutDashboard, exact: true },
+  { title: "আমার প্রোফাইল", url: "/admin/profile", icon: UserRound, exact: true },
   { title: "নিউজফিড", url: "/admin/newsfeed", icon: Newspaper, feature: "newsfeed", exact: true },
   { title: "নিউজফিড পোস্ট", url: "/admin/feed", icon: Newspaper, feature: "newsfeed", badge: "pending" },
   { title: "মেসেজ", url: "/admin/messages", icon: MessageSquare, badge: "messages" },
