@@ -39,6 +39,7 @@ import {
   Database,
   Newspaper,
   UserCog,
+  UserRound,
   KeyRound,
 } from "lucide-react";
 
