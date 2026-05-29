@@ -49,6 +49,7 @@ export const Route = createFileRoute("/admin")({
 
 const menu = [
   { title: "ড্যাশবোর্ড", url: "/admin", icon: LayoutDashboard, exact: true },
+  { title: "নিউজফিড পোস্ট", url: "/admin/feed", icon: Newspaper },
   { title: "ছাত্রছাত্রী ভর্তি", url: "/admin/admission", icon: UserPlus },
   { title: "সকল শিক্ষার্থী", url: "/admin/students", icon: Users },
   { title: "ফোনবুক", url: "/admin/phonebook", icon: BookUser },
