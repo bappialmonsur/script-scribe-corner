@@ -88,6 +88,9 @@ function AdminLayout() {
   const { user, loading } = useSession();
   const { data: access, isLoading: accessLoading } = useMyAccess(user);
   const path = useRouterState({ select: (r) => r.location.pathname });
+  const isAdminUser = !!access?.isAdmin;
+  const { data: counts } = useAdminNotifications(user, isAdminUser);
+  useEffect(() => { if (isAdminUser) requestPushPermission(); }, [isAdminUser]);
 
   if (loading || (user && accessLoading)) {
     return (
