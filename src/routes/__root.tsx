@@ -85,6 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "সমীকরণ শিক্ষা পরিবার" },
       { name: "twitter:description", content: "A web application for a coaching center, managing student admissions, attendance, results, and course content." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5VzX71UjK5PQkazWxKmIQ2gqBEH2/social-images/social-1780167462513-somikoron_logo512-x-512-px.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5VzX71UjK5PQkazWxKmIQ2gqBEH2/social-images/social-1780167462513-somikoron_logo512-x-512-px.webp" },
     ],
     links: [
       {
