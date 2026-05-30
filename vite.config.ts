@@ -12,4 +12,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Force the nitro deploy plugin to run even outside the Lovable sandbox so
+  // `npm run build` on your own server (e.g. cPanel) produces a server bundle.
+  // The build target (preset) is controlled by the NITRO_PRESET env var:
+  //   - default (Lovable/Cloudflare): leave it unset -> "cloudflare-module"
+  //   - cPanel / VPS Node hosting: build with `NITRO_PRESET=node-server npm run build`
+  //     which outputs the server entry at `dist/server/index.mjs`.
+  nitro: true,
 });
