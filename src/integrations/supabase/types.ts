@@ -189,6 +189,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          link_url: string | null
           media_path: string | null
           media_type: Database["public"]["Enums"]["feed_media_type"]
           status: string
@@ -204,6 +205,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          link_url?: string | null
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]
           status?: string
@@ -219,6 +221,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          link_url?: string | null
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]
           status?: string
@@ -661,6 +664,30 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      video_sources: {
+        Row: {
+          channel_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+        }
+        Insert: {
+          channel_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+        }
+        Update: {
+          channel_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
         }
         Relationships: []
       }
