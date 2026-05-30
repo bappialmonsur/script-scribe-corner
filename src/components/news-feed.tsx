@@ -459,7 +459,19 @@ export function PostCard({ post }: { post: FeedPost }) {
           />
         </div>
       )}
-      {post.media_type === "video" && post.media_path && (
+      {post.media_type === "video" && youtubeId(post.link_url) && (
+        <div className="relative w-full bg-black" style={{ aspectRatio: "16 / 9" }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId(post.link_url)}`}
+            title={post.body ?? "YouTube ভিডিও"}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full"
+          />
+        </div>
+      )}
+      {post.media_type === "video" && !youtubeId(post.link_url) && post.media_path && (
         <video src={mediaUrl(post.media_path)} controls playsInline className="w-full max-h-[600px] bg-black" />
       )}
       {post.media_type === "audio" && post.media_path && (
