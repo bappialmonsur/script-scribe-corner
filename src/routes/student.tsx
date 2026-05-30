@@ -12,6 +12,7 @@ import {
   Home, Bell, CalendarCheck, GraduationCap, BarChart3, FileText, LogOut, Loader2, ShieldAlert, BookOpenCheck, UserRound, Newspaper, MessageSquare,
 } from "lucide-react";
 import { bnClass } from "@/lib/grading";
+import { NotificationsBell } from "@/components/notifications-bell";
 
 export const Route = createFileRoute("/student")({
   head: () => ({
@@ -98,8 +99,11 @@ function StudentLayout() {
           <header className="h-14 bg-white border-b border-academy-navy/10 flex items-center px-4 gap-2 sticky top-0 z-10">
             <SidebarTrigger />
             <div className="font-bold text-academy-navy truncate">শিক্ষার্থী প্যানেল</div>
-            <div className="ml-auto text-xs text-muted-foreground hidden sm:block truncate">
-              {student.full_name} · {bnClass(student.class_level)}
+            <div className="ml-auto flex items-center gap-2">
+              <div className="text-xs text-muted-foreground hidden sm:block truncate">
+                {student.full_name} · {bnClass(student.class_level)}
+              </div>
+              <NotificationsBell />
             </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-x-hidden">

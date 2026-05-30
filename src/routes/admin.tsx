@@ -5,6 +5,8 @@ import { useAdminNotifications, requestPushPermission, type AdminCounts } from "
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { NotificationsBell } from "@/components/notifications-bell";
+
 
 import {
   Sidebar,
@@ -148,8 +150,11 @@ function AdminLayout() {
           <header className="h-14 bg-white border-b border-academy-navy/10 flex items-center px-4 gap-2 sticky top-0 z-10">
             <SidebarTrigger />
             <div className="font-bold text-academy-navy">{panelLabel}</div>
-            <div className="ml-auto text-xs text-muted-foreground hidden sm:block">
-              {user.phone ? "0" + user.phone.replace(/^\+?880/, "") : user.email}
+            <div className="ml-auto flex items-center gap-2">
+              <div className="text-xs text-muted-foreground hidden sm:block">
+                {user.phone ? "0" + user.phone.replace(/^\+?880/, "") : user.email}
+              </div>
+              <NotificationsBell />
             </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
