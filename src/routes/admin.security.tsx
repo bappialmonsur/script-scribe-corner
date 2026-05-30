@@ -50,9 +50,8 @@ function SecurityPage() {
       <form onSubmit={onSubmit} className="rounded-2xl border bg-white p-6 shadow-sm space-y-4">
         <div className="space-y-2">
           <Label htmlFor="new-password">নতুন পাসওয়ার্ড</Label>
-          <Input
+          <PasswordInput
             id="new-password"
-            type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="কমপক্ষে ৬ অক্ষর"
@@ -61,9 +60,8 @@ function SecurityPage() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="confirm-password">আবার লিখুন</Label>
-          <Input
+          <PasswordInput
             id="confirm-password"
-            type="password"
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
             placeholder="নতুন পাসওয়ার্ড আবার লিখুন"
