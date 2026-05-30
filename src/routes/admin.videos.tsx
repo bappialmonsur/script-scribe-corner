@@ -25,6 +25,7 @@ function VideoSourcesAdmin() {
   const [channelId, setChannelId] = useState("");
   const [adding, setAdding] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [postingId, setPostingId] = useState<string | null>(null);
 
   const { data: sources, isLoading } = useQuery({
     queryKey: ["video-sources"],
