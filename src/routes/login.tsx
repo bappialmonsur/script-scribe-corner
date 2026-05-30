@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -175,7 +176,7 @@ function FormBody(props: {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">পাসওয়ার্ড</Label>
-        <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
+        <PasswordInput id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
       </div>
       <Button type="submit" disabled={busy} className="w-full bg-academy-navy hover:bg-academy-navy/90 text-white">
         {busy && <Loader2 className="animate-spin" />}
