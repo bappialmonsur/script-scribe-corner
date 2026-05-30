@@ -268,12 +268,40 @@ function CommentSection({ postId }: { postId: string }) {
 export function PostCard({ post }: { post: FeedPost }) {
   const { user } = useSession();
   const qc = useQueryClient();
+  const { data: viewer } = useViewerIdentity(user?.id);
   const name = post.author_name?.trim() || "সমীকরণ শিক্ষা পরিবার";
   const role = post.author_role || "admin";
   const isStaff = role === "admin" || role === "teacher";
   const initial = name.charAt(0) || "স";
   const pending = post.status === "pending";
   const [showComments, setShowComments] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const canDelete =
+    !!user &&
+    (viewer?.role === "admin" ||
+      viewer?.role === "teacher" ||
+      (!!post.author_id && post.author_id === user.id));
+
+  const removePost = async () => {
+    if (!confirm("পোস্টটি মুছে ফেলবেন?")) return;
+    setDeleting(true);
+    try {
+      if (post.media_path) {
+        await supabase.storage.from("feed-media").remove([post.media_path]);
+      }
+      const { error } = await supabase.from("feed_posts").delete().eq("id", post.id);
+      if (error) throw error;
+      toast.success("পোস্টটি মুছে ফেলা হয়েছে");
+      qc.invalidateQueries({ queryKey: ["student-feed"] });
+      qc.invalidateQueries({ queryKey: ["panel-feed"] });
+      qc.invalidateQueries({ queryKey: ["admin-feed"] });
+    } catch (e: any) {
+      toast.error(e.message ?? "মুছে ফেলা ব্যর্থ হয়েছে");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   // Likes: total count + whether current user liked
   const { data: likeData } = useQuery({
