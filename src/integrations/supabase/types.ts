@@ -406,6 +406,45 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          actor_id: string | null
+          actor_meta: string | null
+          actor_name: string | null
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          post_id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_meta?: string | null
+          actor_name?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          post_id: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          actor_meta?: string | null
+          actor_name?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          post_id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pdf_notes: {
         Row: {
           class_level: Database["public"]["Enums"]["class_level"]
@@ -647,6 +686,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      notify_resolve_meta: { Args: { _user_id: string }; Returns: string }
+      notify_resolve_name: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "student" | "teacher"
