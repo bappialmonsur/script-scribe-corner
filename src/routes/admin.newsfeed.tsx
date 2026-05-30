@@ -19,7 +19,7 @@ function PanelNewsfeed() {
       const { data, error } = await supabase
         .from("feed_posts")
         .select(
-          "id, body, media_type, media_path, class_level, created_at, author_id, author_name, author_role, author_meta, status",
+          "id, body, media_type, media_path, link_url, class_level, created_at, author_id, author_name, author_role, author_meta, status",
         )
         .eq("status", "approved")
         .eq("is_active", true)
