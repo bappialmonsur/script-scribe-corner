@@ -25,6 +25,7 @@ function VideoSourcesAdmin() {
   const [channelId, setChannelId] = useState("");
   const [adding, setAdding] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [postingId, setPostingId] = useState<string | null>(null);
 
   const { data: sources, isLoading } = useQuery({
     queryKey: ["video-sources"],
@@ -74,13 +75,12 @@ function VideoSourcesAdmin() {
     qc.invalidateQueries({ queryKey: ["video-sources"] });
   };
 
-  const postNow = async () => {
-    setPosting(true);
+  const doPost = async (channelId?: string) => {
     try {
       const res = await fetch("/api/public/hooks/youtube-feed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: "{}",
+        body: JSON.stringify(channelId ? { channel_id: channelId } : {}),
       });
       const json = await res.json();
       if (json.ok) {
@@ -94,8 +94,24 @@ function VideoSourcesAdmin() {
       }
     } catch (e: any) {
       toast.error(e.message ?? "পোস্ট ব্যর্থ হয়েছে");
+    }
+  };
+
+  const postNow = async () => {
+    setPosting(true);
+    try {
+      await doPost();
     } finally {
       setPosting(false);
+    }
+  };
+
+  const postFromChannel = async (channelId: string) => {
+    setPostingId(channelId);
+    try {
+      await doPost(channelId);
+    } finally {
+      setPostingId(null);
     }
   };
 
@@ -155,6 +171,20 @@ function VideoSourcesAdmin() {
                   <div className="font-semibold text-academy-navy text-sm truncate">{s.name}</div>
                   <div className="text-xs text-muted-foreground truncate">{s.channel_id}</div>
                 </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={postingId === s.channel_id || !s.is_active}
+                  onClick={() => postFromChannel(s.channel_id)}
+                  title="এই চ্যানেল থেকে এখনই পোস্ট করুন"
+                >
+                  {postingId === s.channel_id ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Zap className="size-4" />
+                  )}
+                  পোস্ট
+                </Button>
                 <Switch checked={s.is_active} onCheckedChange={(v) => toggle(s.id, v)} />
                 <Button size="icon" variant="ghost" onClick={() => remove(s.id)}>
                   <Trash2 className="size-4 text-red-500" />
