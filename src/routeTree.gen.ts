@@ -44,6 +44,7 @@ import { Route as AdminAdmissionRouteImport } from './routes/admin.admission'
 import { Route as AdminAbsentRouteImport } from './routes/admin.absent'
 import { Route as AdminResultsIndexRouteImport } from './routes/admin.results.index'
 import { Route as AdminResultsExamIdRouteImport } from './routes/admin.results.$examId'
+import { Route as ApiPublicHooksYoutubeFeedRouteImport } from './routes/api/public/hooks/youtube-feed'
 
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
@@ -220,6 +221,12 @@ const AdminResultsExamIdRoute = AdminResultsExamIdRouteImport.update({
   path: '/$examId',
   getParentRoute: () => AdminResultsRoute,
 } as any)
+const ApiPublicHooksYoutubeFeedRoute =
+  ApiPublicHooksYoutubeFeedRouteImport.update({
+    id: '/api/public/hooks/youtube-feed',
+    path: '/api/public/hooks/youtube-feed',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -257,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/student/': typeof StudentIndexRoute
   '/admin/results/$examId': typeof AdminResultsExamIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
+  '/api/public/hooks/youtube-feed': typeof ApiPublicHooksYoutubeFeedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -291,6 +299,7 @@ export interface FileRoutesByTo {
   '/student': typeof StudentIndexRoute
   '/admin/results/$examId': typeof AdminResultsExamIdRoute
   '/admin/results': typeof AdminResultsIndexRoute
+  '/api/public/hooks/youtube-feed': typeof ApiPublicHooksYoutubeFeedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -329,6 +338,7 @@ export interface FileRoutesById {
   '/student/': typeof StudentIndexRoute
   '/admin/results/$examId': typeof AdminResultsExamIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
+  '/api/public/hooks/youtube-feed': typeof ApiPublicHooksYoutubeFeedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -368,6 +378,7 @@ export interface FileRouteTypes {
     | '/student/'
     | '/admin/results/$examId'
     | '/admin/results/'
+    | '/api/public/hooks/youtube-feed'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -402,6 +413,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/admin/results/$examId'
     | '/admin/results'
+    | '/api/public/hooks/youtube-feed'
   id:
     | '__root__'
     | '/'
@@ -439,6 +451,7 @@ export interface FileRouteTypes {
     | '/student/'
     | '/admin/results/$examId'
     | '/admin/results/'
+    | '/api/public/hooks/youtube-feed'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -446,6 +459,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   StudentRoute: typeof StudentRouteWithChildren
+  ApiPublicHooksYoutubeFeedRoute: typeof ApiPublicHooksYoutubeFeedRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -695,6 +709,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResultsExamIdRouteImport
       parentRoute: typeof AdminResultsRoute
     }
+    '/api/public/hooks/youtube-feed': {
+      id: '/api/public/hooks/youtube-feed'
+      path: '/api/public/hooks/youtube-feed'
+      fullPath: '/api/public/hooks/youtube-feed'
+      preLoaderRoute: typeof ApiPublicHooksYoutubeFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -792,6 +813,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   StudentRoute: StudentRouteWithChildren,
+  ApiPublicHooksYoutubeFeedRoute: ApiPublicHooksYoutubeFeedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

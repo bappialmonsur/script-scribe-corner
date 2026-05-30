@@ -16,6 +16,7 @@ export type FeedPost = {
   body: string | null;
   media_type: "text" | "image" | "video" | "audio";
   media_path: string | null;
+  link_url?: string | null;
   class_level: string | null;
   created_at: string;
   author_id?: string | null;
@@ -24,6 +25,12 @@ export type FeedPost = {
   author_meta?: string | null;
   status?: string | null;
 };
+
+export function youtubeId(url?: string | null): string | null {
+  if (!url) return null;
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
 
 export function mediaUrl(path: string) {
   return supabase.storage.from("feed-media").getPublicUrl(path).data.publicUrl;
