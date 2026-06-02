@@ -125,11 +125,15 @@ function NewExamDialog({ onDone }: { onDone: () => void }) {
   const [classLevel, setClassLevel] = useState("");
   const [examType, setExamType] = useState("");
   const [pattern, setPattern] = useState("written");
+  const [department, setDepartment] = useState("all");
+  const [batch, setBatch] = useState("all");
   const [subject, setSubject] = useState("");
   const [fullMarks, setFullMarks] = useState("100");
   const [examDate, setExamDate] = useState(new Date().toISOString().slice(0, 10));
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const showDept = DEPT_CLASS_LEVELS.includes(classLevel);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,6 +145,8 @@ function NewExamDialog({ onDone }: { onDone: () => void }) {
       class_level: classLevel as any,
       exam_type: examType as any,
       pattern: pattern as any,
+      department: showDept && department !== "all" ? (department as any) : null,
+      batch: batch !== "all" ? (batch as any) : null,
       subject: subject.trim(),
       full_marks: Number(fullMarks),
       exam_date: examDate,
