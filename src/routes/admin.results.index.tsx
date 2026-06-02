@@ -96,7 +96,9 @@ function ResultsPage() {
                     {e.title && <span className="text-muted-foreground"> — {e.title}</span>}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {bnClass(e.class_level)} শ্রেণি · {EXAM_TYPE_LABEL[e.exam_type]} · {EXAM_PATTERN_LABEL[e.pattern ?? "written"]} · পূর্ণমান {e.full_marks} ·{" "}
+                    {bnClass(e.class_level)} শ্রেণি · {EXAM_TYPE_LABEL[e.exam_type]} · {EXAM_PATTERN_LABEL[e.pattern ?? "written"]} · পূর্ণমান {e.full_marks}
+                    {e.department ? ` · ${DEPT_LABEL[e.department]}` : ""}
+                    {e.batch ? ` · ${BATCH_LABEL[e.batch]} ব্যাচ` : ""} ·{" "}
                     {new Date(e.exam_date).toLocaleDateString("bn-BD")}
                   </div>
                 </div>
