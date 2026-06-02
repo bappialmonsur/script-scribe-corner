@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
-import { calcGrade, calcPositions, EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, bnClass } from "@/lib/grading";
+import { calcGrade, calcPositions, EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, bnClass, DEPT_LABEL, BATCH_LABEL, DEPT_CLASS_LEVELS } from "@/lib/grading";
 
 export const Route = createFileRoute("/admin/results/$examId")({
   component: MarksEntryPage,
@@ -24,12 +24,7 @@ type Row = {
   roll: string | null;
   marks: number | null;
   department: string;
-};
-
-const DEPT_LABEL: Record<string, string> = {
-  none: "প্রযোজ্য নয়",
-  science: "বিজ্ঞান",
-  business: "ব্যবসায় শিক্ষা",
+  batch: string;
 };
 
 function MarksEntryPage() {
@@ -45,16 +40,19 @@ function MarksEntryPage() {
   });
 
   const { data: rows, isLoading: loadingRows, refetch } = useQuery({
-    queryKey: ["exam-roster", examId, exam?.class_level],
+    queryKey: ["exam-roster", examId, exam?.class_level, exam?.department, exam?.batch],
     enabled: !!exam,
     queryFn: async () => {
+      let sq = supabase
+        .from("students")
+        .select("id, full_name, roll, department, batch")
+        .eq("class_level", exam!.class_level)
+        .eq("is_active", true);
+      // পরীক্ষাটি নির্দিষ্ট বিভাগ/ব্যাচের জন্য হলে রোস্টার সেভাবেই সীমিত হবে
+      if ((exam as any)!.department) sq = sq.eq("department", (exam as any).department);
+      if ((exam as any)!.batch) sq = sq.eq("batch", (exam as any).batch);
       const [{ data: students, error: e1 }, { data: results, error: e2 }] = await Promise.all([
-        supabase
-          .from("students")
-          .select("id, full_name, roll, department")
-          .eq("class_level", exam!.class_level)
-          .eq("is_active", true)
-          .order("roll", { ascending: true }),
+        sq.order("roll", { ascending: true }),
         supabase.from("exam_results").select("student_id, marks").eq("exam_id", examId),
       ]);
       if (e1) throw e1;
@@ -65,6 +63,7 @@ function MarksEntryPage() {
         full_name: s.full_name,
         roll: s.roll,
         department: (s as any).department ?? "none",
+        batch: (s as any).batch ?? "",
         marks: marksMap.has(s.id) ? marksMap.get(s.id)! : null,
       })) as Row[];
     },
@@ -73,14 +72,25 @@ function MarksEntryPage() {
   const [edits, setEdits] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [deptFilter, setDeptFilter] = useState("all");
+  const [batchFilter, setBatchFilter] = useState("all");
 
-  // শ্রেণি ৯-১২ এর জন্য বিভাগ ফিল্টার দেখানো হবে
-  const showDept = ["9", "10", "11", "12"].includes(String(exam?.class_level ?? ""));
+  // শ্রেণি ৯-১২ এর জন্য বিভাগ ফিল্টার দেখানো হবে (পরীক্ষাটি কোনো নির্দিষ্ট বিভাগের না হলে)
+  const showDept =
+    DEPT_CLASS_LEVELS.includes(String(exam?.class_level ?? "")) && !(exam as any)?.department;
+  // পরীক্ষাটি কোনো নির্দিষ্ট ব্যাচের না হলে ব্যাচ ফিল্টার দেখানো হবে
+  const showBatch = !(exam as any)?.batch;
 
   // রোস্টারে আসলে কোন কোন বিভাগ আছে
   const availableDepts = useMemo(() => {
     const set = new Set<string>();
     (rows ?? []).forEach((r) => set.add(r.department));
+    return Array.from(set);
+  }, [rows]);
+
+  // রোস্টারে আসলে কোন কোন ব্যাচ আছে
+  const availableBatches = useMemo(() => {
+    const set = new Set<string>();
+    (rows ?? []).forEach((r) => { if (r.batch) set.add(r.batch); });
     return Array.from(set);
   }, [rows]);
 
@@ -92,12 +102,15 @@ function MarksEntryPage() {
     }
   }, [rows]);
 
-  // বিভাগ অনুযায়ী ফিল্টার করা সারি
+  // বিভাগ ও ব্যাচ অনুযায়ী ফিল্টার করা সারি
   const filteredRows = useMemo<Row[]>(() => {
     if (!rows) return [];
-    if (!showDept || deptFilter === "all") return rows;
-    return rows.filter((r) => r.department === deptFilter);
-  }, [rows, showDept, deptFilter]);
+    return rows.filter((r) => {
+      if (showDept && deptFilter !== "all" && r.department !== deptFilter) return false;
+      if (showBatch && batchFilter !== "all" && r.batch !== batchFilter) return false;
+      return true;
+    });
+  }, [rows, showDept, deptFilter, showBatch, batchFilter]);
 
   const currentRows = useMemo<Row[]>(() => {
     return filteredRows.map((r) => {
@@ -162,7 +175,9 @@ function MarksEntryPage() {
             {exam.subject}{exam.title ? ` — ${exam.title}` : ""}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {bnClass(exam.class_level)} · {EXAM_TYPE_LABEL[exam.exam_type]} · {EXAM_PATTERN_LABEL[(exam as any).pattern ?? "written"]} · পূর্ণমান {exam.full_marks} ·{" "}
+            {bnClass(exam.class_level)} · {EXAM_TYPE_LABEL[exam.exam_type]} · {EXAM_PATTERN_LABEL[(exam as any).pattern ?? "written"]} · পূর্ণমান {exam.full_marks}
+            {(exam as any).department ? ` · ${DEPT_LABEL[(exam as any).department]}` : ""}
+            {(exam as any).batch ? ` · ${BATCH_LABEL[(exam as any).batch]} ব্যাচ` : ""} ·{" "}
             {new Date(exam.exam_date).toLocaleDateString("bn-BD")}
           </p>
         </div>
@@ -172,18 +187,36 @@ function MarksEntryPage() {
         </Button>
       </div>
 
-      {showDept && (
+      {(showDept || showBatch) && (
         <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 flex-wrap">
-          <span className="text-sm font-medium text-academy-navy">বিভাগ:</span>
-          <Select value={deptFilter} onValueChange={setDeptFilter}>
-            <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">সব বিভাগ</SelectItem>
-              {availableDepts.map((d) => (
-                <SelectItem key={d} value={d}>{DEPT_LABEL[d] ?? d}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {showDept && (
+            <>
+              <span className="text-sm font-medium text-academy-navy">বিভাগ:</span>
+              <Select value={deptFilter} onValueChange={setDeptFilter}>
+                <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">সব বিভাগ</SelectItem>
+                  {availableDepts.map((d) => (
+                    <SelectItem key={d} value={d}>{DEPT_LABEL[d] ?? d}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
+          {showBatch && availableBatches.length > 0 && (
+            <>
+              <span className="text-sm font-medium text-academy-navy">ব্যাচ:</span>
+              <Select value={batchFilter} onValueChange={setBatchFilter}>
+                <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">সব ব্যাচ</SelectItem>
+                  {availableBatches.map((b) => (
+                    <SelectItem key={b} value={b}>{BATCH_LABEL[b] ?? b}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
           <span className="text-xs text-muted-foreground">
             {currentRows.length} জন শিক্ষার্থী
           </span>

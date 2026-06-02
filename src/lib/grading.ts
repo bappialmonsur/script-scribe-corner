@@ -28,6 +28,21 @@ export const EXAM_PATTERN_LABEL: Record<string, string> = {
 
 export const CLASS_LEVELS = ["5", "6", "7", "8", "9", "10", "11", "12"];
 
+export const DEPT_LABEL: Record<string, string> = {
+  none: "প্রযোজ্য নয়",
+  science: "বিজ্ঞান",
+  business: "ব্যবসায় শিক্ষা",
+};
+
+export const BATCH_LABEL: Record<string, string> = {
+  morning: "সকাল",
+  afternoon: "বিকাল",
+  evening: "সন্ধ্যা",
+};
+
+// শ্রেণি ৯-১২ এ বিভাগ প্রযোজ্য
+export const DEPT_CLASS_LEVELS = ["9", "10", "11", "12"];
+
 const BN_DIGITS = ["০","১","২","৩","৪","৫","৬","৭","৮","৯"];
 export function bnNum(n: number | string): string {
   return String(n).replace(/[0-9]/g, (d) => BN_DIGITS[+d]);

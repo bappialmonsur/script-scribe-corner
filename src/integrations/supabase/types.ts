@@ -141,8 +141,10 @@ export type Database = {
       }
       exams: {
         Row: {
+          batch: Database["public"]["Enums"]["batch_time"] | null
           class_level: Database["public"]["Enums"]["class_level"]
           created_at: string
+          department: Database["public"]["Enums"]["department_type"] | null
           exam_date: string
           exam_type: Database["public"]["Enums"]["exam_type"]
           full_marks: number
@@ -153,8 +155,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          batch?: Database["public"]["Enums"]["batch_time"] | null
           class_level: Database["public"]["Enums"]["class_level"]
           created_at?: string
+          department?: Database["public"]["Enums"]["department_type"] | null
           exam_date: string
           exam_type: Database["public"]["Enums"]["exam_type"]
           full_marks: number
@@ -165,8 +169,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          batch?: Database["public"]["Enums"]["batch_time"] | null
           class_level?: Database["public"]["Enums"]["class_level"]
           created_at?: string
+          department?: Database["public"]["Enums"]["department_type"] | null
           exam_date?: string
           exam_type?: Database["public"]["Enums"]["exam_type"]
           full_marks?: number

@@ -9,7 +9,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Printer } from "lucide-react";
-import { calcGrade, calcPositions, CLASS_LEVELS, EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, bnClass } from "@/lib/grading";
+import { calcGrade, calcPositions, CLASS_LEVELS, EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, bnClass, BATCH_LABEL } from "@/lib/grading";
 
 export const Route = createFileRoute("/admin/marksheet")({
   component: MarksheetPage,
@@ -23,21 +23,23 @@ const monthAgoStr = () => {
 
 function MarksheetPage() {
   const [cls, setCls] = useState("");
+  const [batch, setBatch] = useState("all");
   const [studentId, setStudentId] = useState<string>("all");
   const [from, setFrom] = useState(monthAgoStr());
   const [to, setTo] = useState(todayStr());
-  const [generated, setGenerated] = useState<{ cls: string; from: string; to: string; studentId: string } | null>(null);
+  const [generated, setGenerated] = useState<{ cls: string; batch: string; from: string; to: string; studentId: string } | null>(null);
 
   const { data: classStudents } = useQuery({
-    queryKey: ["marksheet-students", cls],
+    queryKey: ["marksheet-students", cls, batch],
     enabled: !!cls,
     queryFn: async () => {
-      const { data, error } = await supabase
+      let q = supabase
         .from("students")
         .select("id, full_name, roll")
         .eq("class_level", cls as any)
-        .eq("is_active", true)
-        .order("roll", { ascending: true });
+        .eq("is_active", true);
+      if (batch !== "all") q = q.eq("batch", batch as any);
+      const { data, error } = await q.order("roll", { ascending: true });
       if (error) throw error;
       return data ?? [];
     },
@@ -50,13 +52,25 @@ function MarksheetPage() {
         <p className="text-sm text-muted-foreground">ক্লাস, শিক্ষার্থী ও তারিখ পরিসর সিলেক্ট করে মার্কশীট তৈরি করুন</p>
       </div>
 
-      <div className="bg-white rounded-2xl border p-4 grid sm:grid-cols-2 lg:grid-cols-5 gap-3 print:hidden">
+      <div className="bg-white rounded-2xl border p-4 grid sm:grid-cols-2 lg:grid-cols-6 gap-3 print:hidden">
         <div>
           <Label>শ্রেণি</Label>
           <Select value={cls} onValueChange={(v) => { setCls(v); setStudentId("all"); }}>
             <SelectTrigger><SelectValue placeholder="বাছাই" /></SelectTrigger>
             <SelectContent>
               {CLASS_LEVELS.map((c) => <SelectItem key={c} value={c}>{bnClass(c)}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>ব্যাচ</Label>
+          <Select value={batch} onValueChange={(v) => { setBatch(v); setStudentId("all"); }}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">সব ব্যাচ</SelectItem>
+              <SelectItem value="morning">{BATCH_LABEL.morning}</SelectItem>
+              <SelectItem value="afternoon">{BATCH_LABEL.afternoon}</SelectItem>
+              <SelectItem value="evening">{BATCH_LABEL.evening}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -86,7 +100,7 @@ function MarksheetPage() {
           <Button
             className="bg-academy-navy text-white w-full"
             disabled={!cls}
-            onClick={() => setGenerated({ cls, from, to, studentId })}
+            onClick={() => setGenerated({ cls, batch, from, to, studentId })}
           >
             মার্কশীট তৈরি
           </Button>
@@ -99,24 +113,27 @@ function MarksheetPage() {
 }
 
 
-function MarksheetView({ cls, from, to, studentId }: { cls: string; from: string; to: string; studentId: string }) {
+function MarksheetView({ cls, batch, from, to, studentId }: { cls: string; batch: string; from: string; to: string; studentId: string }) {
   const { data, isLoading } = useQuery({
-    queryKey: ["marksheet", cls, from, to],
+    queryKey: ["marksheet", cls, batch, from, to],
     queryFn: async () => {
+      let studentQ = supabase
+        .from("students")
+        .select("id, full_name, roll")
+        .eq("class_level", cls as any)
+        .eq("is_active", true);
+      if (batch !== "all") studentQ = studentQ.eq("batch", batch as any);
+      let examQ = supabase
+        .from("exams")
+        .select("*")
+        .eq("class_level", cls as any)
+        .gte("exam_date", from)
+        .lte("exam_date", to);
+      // ব্যাচ নির্বাচিত হলে: সব-ব্যাচের পরীক্ষা + ঐ ব্যাচের পরীক্ষা
+      if (batch !== "all") examQ = examQ.or(`batch.is.null,batch.eq.${batch}`);
       const [{ data: students, error: e1 }, { data: exams, error: e2 }] = await Promise.all([
-        supabase
-          .from("students")
-          .select("id, full_name, roll")
-          .eq("class_level", cls as any)
-          .eq("is_active", true)
-          .order("roll", { ascending: true }),
-        supabase
-          .from("exams")
-          .select("*")
-          .eq("class_level", cls as any)
-          .gte("exam_date", from)
-          .lte("exam_date", to)
-          .order("exam_date", { ascending: true }),
+        studentQ.order("roll", { ascending: true }),
+        examQ.order("exam_date", { ascending: true }),
       ]);
       if (e1) throw e1;
       if (e2) throw e2;

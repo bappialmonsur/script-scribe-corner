@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, Plus, FileText, Trash2, GraduationCap, Printer } from "lucide-react";
-import { EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, CLASS_LEVELS, bnClass } from "@/lib/grading";
+import { EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, CLASS_LEVELS, bnClass, DEPT_LABEL, BATCH_LABEL, DEPT_CLASS_LEVELS } from "@/lib/grading";
 
 export const Route = createFileRoute("/admin/results/")({
   component: ResultsPage,
@@ -96,7 +96,9 @@ function ResultsPage() {
                     {e.title && <span className="text-muted-foreground"> — {e.title}</span>}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {bnClass(e.class_level)} শ্রেণি · {EXAM_TYPE_LABEL[e.exam_type]} · {EXAM_PATTERN_LABEL[e.pattern ?? "written"]} · পূর্ণমান {e.full_marks} ·{" "}
+                    {bnClass(e.class_level)} শ্রেণি · {EXAM_TYPE_LABEL[e.exam_type]} · {EXAM_PATTERN_LABEL[e.pattern ?? "written"]} · পূর্ণমান {e.full_marks}
+                    {e.department ? ` · ${DEPT_LABEL[e.department]}` : ""}
+                    {e.batch ? ` · ${BATCH_LABEL[e.batch]} ব্যাচ` : ""} ·{" "}
                     {new Date(e.exam_date).toLocaleDateString("bn-BD")}
                   </div>
                 </div>
@@ -123,11 +125,15 @@ function NewExamDialog({ onDone }: { onDone: () => void }) {
   const [classLevel, setClassLevel] = useState("");
   const [examType, setExamType] = useState("");
   const [pattern, setPattern] = useState("written");
+  const [department, setDepartment] = useState("all");
+  const [batch, setBatch] = useState("all");
   const [subject, setSubject] = useState("");
   const [fullMarks, setFullMarks] = useState("100");
   const [examDate, setExamDate] = useState(new Date().toISOString().slice(0, 10));
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const showDept = DEPT_CLASS_LEVELS.includes(classLevel);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,6 +145,8 @@ function NewExamDialog({ onDone }: { onDone: () => void }) {
       class_level: classLevel as any,
       exam_type: examType as any,
       pattern: pattern as any,
+      department: showDept && department !== "all" ? (department as any) : null,
+      batch: batch !== "all" ? (batch as any) : null,
       subject: subject.trim(),
       full_marks: Number(fullMarks),
       exam_date: examDate,
@@ -202,6 +210,33 @@ function NewExamDialog({ onDone }: { onDone: () => void }) {
           <div>
             <Label>তারিখ *</Label>
             <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {showDept && (
+            <div>
+              <Label>বিভাগ</Label>
+              <Select value={department} onValueChange={setDepartment}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">সব বিভাগ</SelectItem>
+                  <SelectItem value="science">{DEPT_LABEL.science}</SelectItem>
+                  <SelectItem value="business">{DEPT_LABEL.business}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div>
+            <Label>ব্যাচ</Label>
+            <Select value={batch} onValueChange={setBatch}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">সব ব্যাচ</SelectItem>
+                <SelectItem value="morning">{BATCH_LABEL.morning}</SelectItem>
+                <SelectItem value="afternoon">{BATCH_LABEL.afternoon}</SelectItem>
+                <SelectItem value="evening">{BATCH_LABEL.evening}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div>
