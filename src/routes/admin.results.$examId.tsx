@@ -175,7 +175,9 @@ function MarksEntryPage() {
             {exam.subject}{exam.title ? ` — ${exam.title}` : ""}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {bnClass(exam.class_level)} · {EXAM_TYPE_LABEL[exam.exam_type]} · {EXAM_PATTERN_LABEL[(exam as any).pattern ?? "written"]} · পূর্ণমান {exam.full_marks} ·{" "}
+            {bnClass(exam.class_level)} · {EXAM_TYPE_LABEL[exam.exam_type]} · {EXAM_PATTERN_LABEL[(exam as any).pattern ?? "written"]} · পূর্ণমান {exam.full_marks}
+            {(exam as any).department ? ` · ${DEPT_LABEL[(exam as any).department]}` : ""}
+            {(exam as any).batch ? ` · ${BATCH_LABEL[(exam as any).batch]} ব্যাচ` : ""} ·{" "}
             {new Date(exam.exam_date).toLocaleDateString("bn-BD")}
           </p>
         </div>
@@ -185,18 +187,36 @@ function MarksEntryPage() {
         </Button>
       </div>
 
-      {showDept && (
+      {(showDept || showBatch) && (
         <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 flex-wrap">
-          <span className="text-sm font-medium text-academy-navy">বিভাগ:</span>
-          <Select value={deptFilter} onValueChange={setDeptFilter}>
-            <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">সব বিভাগ</SelectItem>
-              {availableDepts.map((d) => (
-                <SelectItem key={d} value={d}>{DEPT_LABEL[d] ?? d}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {showDept && (
+            <>
+              <span className="text-sm font-medium text-academy-navy">বিভাগ:</span>
+              <Select value={deptFilter} onValueChange={setDeptFilter}>
+                <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">সব বিভাগ</SelectItem>
+                  {availableDepts.map((d) => (
+                    <SelectItem key={d} value={d}>{DEPT_LABEL[d] ?? d}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
+          {showBatch && availableBatches.length > 0 && (
+            <>
+              <span className="text-sm font-medium text-academy-navy">ব্যাচ:</span>
+              <Select value={batchFilter} onValueChange={setBatchFilter}>
+                <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">সব ব্যাচ</SelectItem>
+                  {availableBatches.map((b) => (
+                    <SelectItem key={b} value={b}>{BATCH_LABEL[b] ?? b}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
           <span className="text-xs text-muted-foreground">
             {currentRows.length} জন শিক্ষার্থী
           </span>
