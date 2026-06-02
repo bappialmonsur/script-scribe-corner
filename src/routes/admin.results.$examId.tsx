@@ -5,6 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from "@/components/ui/table";
 import { toast } from "sonner";
@@ -15,7 +18,19 @@ export const Route = createFileRoute("/admin/results/$examId")({
   component: MarksEntryPage,
 });
 
-type Row = { student_id: string; full_name: string; roll: string | null; marks: number | null };
+type Row = {
+  student_id: string;
+  full_name: string;
+  roll: string | null;
+  marks: number | null;
+  department: string;
+};
+
+const DEPT_LABEL: Record<string, string> = {
+  none: "প্রযোজ্য নয়",
+  science: "বিজ্ঞান",
+  business: "ব্যবসায় শিক্ষা",
+};
 
 function MarksEntryPage() {
   const { examId } = Route.useParams();
