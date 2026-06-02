@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, Plus, FileText, Trash2, GraduationCap, Printer } from "lucide-react";
-import { EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, CLASS_LEVELS, bnClass } from "@/lib/grading";
+import { EXAM_TYPE_LABEL, EXAM_PATTERN_LABEL, CLASS_LEVELS, bnClass, DEPT_LABEL, BATCH_LABEL, DEPT_CLASS_LEVELS } from "@/lib/grading";
 
 export const Route = createFileRoute("/admin/results/")({
   component: ResultsPage,
