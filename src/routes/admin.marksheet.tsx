@@ -63,6 +63,18 @@ function MarksheetPage() {
           </Select>
         </div>
         <div>
+          <Label>ব্যাচ</Label>
+          <Select value={batch} onValueChange={(v) => { setBatch(v); setStudentId("all"); }}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">সব ব্যাচ</SelectItem>
+              <SelectItem value="morning">{BATCH_LABEL.morning}</SelectItem>
+              <SelectItem value="afternoon">{BATCH_LABEL.afternoon}</SelectItem>
+              <SelectItem value="evening">{BATCH_LABEL.evening}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
           <Label>শিক্ষার্থী</Label>
           <Select value={studentId} onValueChange={setStudentId} disabled={!cls}>
             <SelectTrigger><SelectValue placeholder="বাছাই" /></SelectTrigger>
