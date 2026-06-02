@@ -100,7 +100,7 @@ function MarksheetPage() {
           <Button
             className="bg-academy-navy text-white w-full"
             disabled={!cls}
-            onClick={() => setGenerated({ cls, from, to, studentId })}
+            onClick={() => setGenerated({ cls, batch, from, to, studentId })}
           >
             মার্কশীট তৈরি
           </Button>
