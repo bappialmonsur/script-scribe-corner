@@ -124,12 +124,7 @@ function MarksheetView({ cls, batch, from, to, studentId }: { cls: string; batch
         .eq("is_active", true);
       if (batch !== "all") studentQ = studentQ.eq("batch", batch as any);
       const [{ data: students, error: e1 }, { data: exams, error: e2 }] = await Promise.all([
-        supabase
-          .from("students")
-          .select("id, full_name, roll")
-          .eq("class_level", cls as any)
-          .eq("is_active", true)
-          .order("roll", { ascending: true }),
+        studentQ.order("roll", { ascending: true }),
         supabase
           .from("exams")
           .select("*")
