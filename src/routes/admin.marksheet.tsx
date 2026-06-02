@@ -123,15 +123,17 @@ function MarksheetView({ cls, batch, from, to, studentId }: { cls: string; batch
         .eq("class_level", cls as any)
         .eq("is_active", true);
       if (batch !== "all") studentQ = studentQ.eq("batch", batch as any);
+      let examQ = supabase
+        .from("exams")
+        .select("*")
+        .eq("class_level", cls as any)
+        .gte("exam_date", from)
+        .lte("exam_date", to);
+      // ব্যাচ নির্বাচিত হলে: সব-ব্যাচের পরীক্ষা + ঐ ব্যাচের পরীক্ষা
+      if (batch !== "all") examQ = examQ.or(`batch.is.null,batch.eq.${batch}`);
       const [{ data: students, error: e1 }, { data: exams, error: e2 }] = await Promise.all([
         studentQ.order("roll", { ascending: true }),
-        supabase
-          .from("exams")
-          .select("*")
-          .eq("class_level", cls as any)
-          .gte("exam_date", from)
-          .lte("exam_date", to)
-          .order("exam_date", { ascending: true }),
+        examQ.order("exam_date", { ascending: true }),
       ]);
       if (e1) throw e1;
       if (e2) throw e2;
