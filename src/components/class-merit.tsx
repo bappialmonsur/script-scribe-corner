@@ -96,8 +96,8 @@ export function ClassMeritStrip({ userId }: { userId?: string }) {
 export function PositionPill({ userId }: { userId?: string }) {
   const { data } = useMonthlyMerit(userId);
   if (!data?.me || data.me.position == null) return null;
-  const { me } = data;
-  const position = me.position;
+  const me = data.me;
+  const position: number = me.position;
   const p = pct(me.total, me.fullTotal);
   return (
     <div
