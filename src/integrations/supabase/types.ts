@@ -195,6 +195,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          is_reel: boolean
           link_url: string | null
           media_path: string | null
           media_type: Database["public"]["Enums"]["feed_media_type"]
@@ -211,6 +212,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          is_reel?: boolean
           link_url?: string | null
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]
@@ -227,6 +229,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          is_reel?: boolean
           link_url?: string | null
           media_path?: string | null
           media_type?: Database["public"]["Enums"]["feed_media_type"]

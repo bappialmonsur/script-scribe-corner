@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { UserPlus, CalendarDays, BellRing, ArrowRight, BookOpenCheck } from "lucide-react";
+import { UserPlus, CalendarDays, BellRing, ArrowRight, GraduationCap, MessageSquare } from "lucide-react";
 
 type Card = {
   to: string;
@@ -39,10 +39,10 @@ const adminCards: Card[] = [
 
 const studentCards: Card[] = [
   {
-    to: "/student/exam",
-    title: "অনলাইন পরীক্ষা",
-    desc: "৩০ MCQ · ৩০ মিনিট · AI প্রশ্ন",
-    icon: BookOpenCheck,
+    to: "/student/results",
+    title: "রেজাল্ট",
+    desc: "পরীক্ষার ফলাফল দেখুন",
+    icon: GraduationCap,
     gradient: "from-emerald-600 via-teal-600 to-academy-navy",
     accent: "text-white",
   },
@@ -56,18 +56,27 @@ const studentCards: Card[] = [
   },
   {
     to: "/student/notices",
-    title: "নোটিফিকেশন",
+    title: "নোটিশ",
     desc: "সর্বশেষ নোটিশ দেখুন",
     icon: BellRing,
     gradient: "from-rose-700 via-rose-600 to-academy-navy",
     accent: "text-amber-200",
   },
+  {
+    to: "/student/messages",
+    title: "মেসেজ",
+    desc: "এডমিনের সাথে চ্যাট",
+    icon: MessageSquare,
+    gradient: "from-indigo-600 via-blue-600 to-academy-navy",
+    accent: "text-white",
+  },
 ];
 
 export function FeatureCards({ variant }: { variant: "admin" | "student" }) {
   const cards = variant === "admin" ? adminCards : studentCards;
+  const gridCols = cards.length === 4 ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 md:grid-cols-3";
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className={`grid ${gridCols} gap-4`}>
       {cards.map((c) => (
         <Link
           key={c.title}

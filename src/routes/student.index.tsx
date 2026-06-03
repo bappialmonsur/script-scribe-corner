@@ -11,6 +11,7 @@ import { bnClass, bnNum } from "@/lib/grading";
 import { FeedHeader, FeedList, type FeedPost } from "@/components/news-feed";
 import { ClassMeritStrip } from "@/components/class-merit";
 import { FeatureCards } from "@/components/feature-cards";
+import { ReelsStrip } from "@/components/reels";
 
 export const Route = createFileRoute("/student/")({
   component: StudentFeed,
@@ -42,6 +43,7 @@ function StudentFeed() {
         .select(
           "id, body, media_type, media_path, link_url, class_level, created_at, author_id, author_name, author_role, author_meta, status",
         )
+        .eq("is_reel", false)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -102,6 +104,9 @@ function StudentFeed() {
       <FeatureCards variant="student" />
 
       <FeedHeader />
+
+      {/* রিলস — সবাই রিল যোগ করতে পারবে */}
+      <ReelsStrip />
 
 
       {/* Student composer */}
