@@ -104,6 +104,7 @@ function StudentLayout() {
               <div className="text-xs text-muted-foreground hidden sm:block truncate">
                 {student.full_name} · {bnClass(student.class_level)}
               </div>
+              <PositionPill userId={user?.id} />
               <NotificationsBell />
             </div>
           </header>
