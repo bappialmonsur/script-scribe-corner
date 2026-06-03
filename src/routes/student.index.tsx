@@ -105,6 +105,9 @@ function StudentFeed() {
 
       <FeedHeader />
 
+      {/* রিলস — সবাই রিল যোগ করতে পারবে */}
+      <ReelsStrip />
+
 
       {/* Student composer */}
       <div className="bg-card rounded-3xl border border-border/70 shadow-sm p-4 space-y-3">
