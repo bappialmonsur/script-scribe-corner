@@ -106,7 +106,7 @@ export function PositionPill({ userId }: { userId?: string }) {
     >
       <Medal className="size-4 text-academy-gold" />
       <span className="text-sm font-bold leading-none">
-        {bnNum(me.position)}
+        {bnNum(position)}
         <span className="text-[11px] font-normal text-muted-foreground">/{bnNum(me.classSize)}</span>
       </span>
       {p && <span className="text-[10px] text-muted-foreground hidden sm:inline">· {bnNum(p)}%</span>}
