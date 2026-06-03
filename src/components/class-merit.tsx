@@ -95,8 +95,8 @@ export function ClassMeritStrip({ userId }: { userId?: string }) {
 /** Compact position pill shown next to the notifications bell. */
 export function PositionPill({ userId }: { userId?: string }) {
   const { data } = useMonthlyMerit(userId);
-  if (!data?.me || data.me.position == null) return null;
-  const me = data.me;
+  const me = data?.me;
+  if (!me || me.position == null) return null;
   const position: number = me.position;
   const p = pct(me.total, me.fullTotal);
   return (
